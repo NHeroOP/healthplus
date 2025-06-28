@@ -3,7 +3,7 @@ import { Pill, MapPin, Phone, Mail, Clock, Facebook, Twitter, Instagram } from "
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 dark:bg-gray-950 text-white">
+    <footer className="bg-zinc-900 dark:bg-zinc-950 text-white">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-4">
           {/* Brand */}

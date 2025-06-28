@@ -26,7 +26,7 @@ interface ProductModalProps {
 export default function ProductModal({ product, isOpen, onClose }: ProductModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-card border-border mx-4">
+      <DialogContent className="max-w-2xl max-h-11/12 overflow-y-auto bg-card border-border mx-4">
         <DialogHeader className="px-4 sm:px-6">
           <DialogTitle className="text-xl sm:text-2xl font-bold text-card-foreground pr-8">{product.name}</DialogTitle>
         </DialogHeader>

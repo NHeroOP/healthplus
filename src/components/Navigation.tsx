@@ -43,13 +43,13 @@ export default function Navigation() {
   };
 
   return (
-    <nav className="bg-background border-b border-border sticky top-0 z-50">
+    <nav className="bg-background/95 dark:bg-neutral-900/95 border-b border-border sticky top-0 z-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
-              <Pill className="h-5 w-5 text-primary-foreground" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-blue-600">
+              <Pill className="h-5 w-5 text-white" />
             </div>
             <span className="text-xl font-bold text-foreground">
               HealthPlus
