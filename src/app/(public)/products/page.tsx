@@ -295,7 +295,7 @@ export default function ProductsPage() {
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Enhanced Filters Sidebar */}
             <div className={`lg:w-80 ${showFilters ? "block" : "hidden lg:block"}`}>
-              <Card className="sticky top-20 border-border bg-card">
+              <Card className="sticky top-20 border-border bg-gray-100 dark:bg-[#181818]">
                 <CardContent className="p-4 sm:p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-base sm:text-lg font-semibold text-card-foreground">Filters</h2>
@@ -336,6 +336,7 @@ export default function ProductsPage() {
                                 id={`category-${category}`}
                                 checked={selectedCategories.includes(category)}
                                 onCheckedChange={(checked) => handleCategoryChange(category, checked as boolean)}
+                                className="border-gray-400"
                               />
                               <Label
                                 htmlFor={`category-${category}`}
@@ -360,6 +361,7 @@ export default function ProductsPage() {
                                 id={`brand-${brand}`}
                                 checked={selectedBrands.includes(brand)}
                                 onCheckedChange={(checked) => handleBrandChange(brand, checked as boolean)}
+                                className="border-gray-400"
                               />
                               <Label
                                 htmlFor={`brand-${brand}`}

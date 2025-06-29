@@ -2,8 +2,9 @@
 
 import { useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import { LayoutDashboard, Package, Users, BarChart3, Settings, LogOut, Menu, X, ShoppingCart } from "lucide-react"
+import { LayoutDashboard, Package, Users, BarChart3, Settings, LogOut, Menu, X, ShoppingCart, Moon, Sun } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useTheme } from "@/contexts/ThemeContext"
 
 const navigation = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -18,6 +19,8 @@ export default function AdminSidebar() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
+
+  const { theme, toggleTheme } = useTheme()
 
   const handleLogout = () => {
     localStorage.removeItem("adminLoggedIn")
@@ -87,7 +90,27 @@ export default function AdminSidebar() {
               </a>
             ))}
           </nav>
-          <div className="p-4 border-t border-border">
+          <div className="p-4 border-t border-border space-y-2">
+            {/* Theme Toggle */}
+            <Button
+              variant="ghost"
+              onClick={toggleTheme}
+              className="w-full justify-start text-muted-foreground hover:text-card-foreground"
+            >
+              {theme === "dark" ? (
+                <>
+                  <Sun className="h-5 w-5 mr-3" />
+                  Light Mode
+                </>
+              ) : (
+                <>
+                  <Moon className="h-5 w-5 mr-3" />
+                  Dark Mode
+                </>
+              )}
+            </Button>
+            
+            {/* Logout Button */}
             <Button
               variant="outline"
               className="w-full justify-start text-destructive hover:text-destructive/80 bg-transparent"

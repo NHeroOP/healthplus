@@ -3,7 +3,7 @@ import { Pill, MapPin, Phone, Mail, Clock, Facebook, Twitter, Instagram } from "
 
 export default function Footer() {
   return (
-    <footer className="bg-zinc-900 dark:bg-zinc-950 text-white">
+    <footer className="bg-zinc-100 dark:bg-zinc-950 text-white">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-4">
           {/* Brand */}
@@ -12,20 +12,20 @@ export default function Footer() {
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600">
                 <Pill className="h-6 w-6 text-white" />
               </div>
-              <span className="text-xl font-bold">HealthPlus</span>
+              <span className="text-xl font-bold text-black dark:text-white">HealthPlus</span>
             </Link>
-            <p className="text-gray-300 dark:text-gray-400 text-sm leading-relaxed mb-4">
+            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
               Your trusted local pharmacy, serving the community with quality healthcare products and personalized
               service since 2008.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="#" className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors">
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="#" className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors">
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <a href="#" className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors">
                 <Instagram className="h-5 w-5" />
               </a>
             </div>
@@ -33,30 +33,30 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-4 text-black dark:text-white">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-gray-300 dark:text-gray-400 hover:text-white transition-colors">
+                <Link href="/" className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/products" className="text-gray-300 dark:text-gray-400 hover:text-white transition-colors">
+                <Link href="/products" className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors">
                   Products
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="text-gray-300 dark:text-gray-400 hover:text-white transition-colors">
+                <Link href="/faq" className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-gray-300 dark:text-gray-400 hover:text-white transition-colors">
+                <Link href="/about" className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-300 dark:text-gray-400 hover:text-white transition-colors">
+                <Link href="/contact" className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors">
                   Contact
                 </Link>
               </li>
@@ -65,22 +65,22 @@ export default function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Legal</h3>
+            <h3 className="text-lg font-semibold mb-4 text-black dark:text-white">Legal</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/privacy" className="text-gray-300 dark:text-gray-400 hover:text-white transition-colors">
+                <Link href="/privacy" className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-gray-300 dark:text-gray-400 hover:text-white transition-colors">
+                <Link href="/terms" className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors">
                   Terms of Service
                 </Link>
               </li>
               <li>
                 <Link
                   href="/accessibility"
-                  className="text-gray-300 dark:text-gray-400 hover:text-white transition-colors"
+                  className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors"
                 >
                   Accessibility
                 </Link>
@@ -88,7 +88,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/admin/login"
-                  className="text-gray-300 dark:text-gray-400 hover:text-white transition-colors"
+                  className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors"
                 >
                   Admin Portal
                 </Link>
@@ -98,11 +98,11 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contact Info</h3>
+            <h3 className="text-lg font-semibold mb-4 text-black dark:text-white">Contact Info</h3>
             <ul className="space-y-3">
               <li className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <span className="text-gray-300 dark:text-gray-400 text-sm">
+                <span className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 text-sm">
                   123 Health Street
                   <br />
                   Medical District
@@ -112,15 +112,15 @@ export default function Footer() {
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-blue-400 flex-shrink-0" />
-                <span className="text-gray-300 dark:text-gray-400 text-sm">(555) 123-4567</span>
+                <span className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 text-sm">(555) 123-4567</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-blue-400 flex-shrink-0" />
-                <span className="text-gray-300 dark:text-gray-400 text-sm">info@healthpluspharmacy.com</span>
+                <span className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 text-sm">info@healthpluspharmacy.com</span>
               </li>
               <li className="flex items-start space-x-3">
                 <Clock className="h-5 w-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                <div className="text-gray-300 dark:text-gray-400 text-sm">
+                <div className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 text-sm">
                   <div>Mon-Fri: 8AM-9PM</div>
                   <div>Sat: 9AM-8PM</div>
                   <div>Sun: 10AM-6PM</div>
@@ -130,19 +130,19 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-gray-800 dark:border-gray-700">
+        <div className="mt-8 pt-8 border-t border-black/50 dark:border-white/50">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-center text-gray-400 dark:text-gray-500 text-sm">
+            <p className="text-center text-gray-600 dark:text-gray-400 text-sm">
               © 2024 HealthPlus Pharmacy. All rights reserved.
             </p>
             <div className="mt-4 md:mt-0 flex space-x-6">
-              <Link href="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">
+              <Link href="/privacy" className="text-gray-600 dark:text-gray-400 hover:text-white text-sm transition-colors">
                 Privacy
               </Link>
-              <Link href="/terms" className="text-gray-400 hover:text-white text-sm transition-colors">
+              <Link href="/terms" className="text-gray-600 dark:text-gray-400 hover:text-white text-sm transition-colors">
                 Terms
               </Link>
-              <Link href="/accessibility" className="text-gray-400 hover:text-white text-sm transition-colors">
+              <Link href="/accessibility" className="text-gray-600 dark:text-gray-400 hover:text-white text-sm transition-colors">
                 Accessibility
               </Link>
             </div>

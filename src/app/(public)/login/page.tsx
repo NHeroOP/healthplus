@@ -16,8 +16,8 @@ import Footer from "@/components/Footer"
 import { useAuth } from "@/contexts/AuthContext"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [email, setEmail] = useState("john.doe@email.com")
+  const [password, setPassword] = useState("password123")
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const { login, isLoading } = useAuth()
@@ -40,7 +40,7 @@ export default function LoginPage() {
 
       <div className="px-4 py-8 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-md">
-          <Link href="/" className="inline-flex items-center text-primary hover:text-primary/80 mb-6">
+          <Link href="/" className="inline-flex md:hidden items-center text-primary hover:text-primary/80 mb-6">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Home
           </Link>

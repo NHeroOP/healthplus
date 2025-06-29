@@ -125,7 +125,7 @@ export default function AboutPage() {
               Get In Touch
             </h2>
             <div className="grid gap-6 sm:gap-8 md:grid-cols-2">
-              <div className="border-r-2 pr-6 border-black/50 dark:border-white/20">
+              <div className="md:border-r-2 pr-6 border-black/50 dark:border-white/20">
                 <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
                   Store Hours
                 </h3>
