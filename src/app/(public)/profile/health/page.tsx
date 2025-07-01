@@ -8,10 +8,10 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { useAuth } from "@/contexts/AuthContext"
+import { useAuthStore } from "@/store/Auth"
 
 export default function HealthInfoPage() {
-  const { user, updateProfile } = useAuth()
+  const { user, updateProfile } = useAuthStore()
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState({
     allergies: [] as string[],

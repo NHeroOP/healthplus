@@ -134,8 +134,7 @@ export default function CartPage() {
 
   return (
     <>
-
-      <div className="px-2 py-4 sm:px-4 sm:py-8 lg:px-8">
+      <div className="flex flex-1 justify-center items-center px-2 py-4 sm:px-4 sm:py-8 lg:px-8 ">
         <div className="mx-auto max-w-6xl">
           <div className="mb-6 sm:mb-8">
             <Link

@@ -14,9 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useAuth } from "../contexts/AuthContext";
 import { useReviews } from "../contexts/ReviewContext";
 import ReviewModal from "./ReviewModal";
+import { useAuthStore } from "@/store/Auth";
 
 interface ProductReviewsProps {
   productId: number;
@@ -27,7 +27,7 @@ export default function ProductReviews({
   productId,
   productName,
 }: ProductReviewsProps) {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const { getProductReviews, markHelpful, getAverageRating, getRatingCounts } =
     useReviews();
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);

@@ -13,55 +13,37 @@ import {
   MessageSquare,
   Settings,
   LogOut,
-  Trash2,
-  Sun,
-  Moon,
   Shield,
   CreditCard,
   Bell,
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { useAuth } from "@/contexts/AuthContext"
-import { useTheme } from "@/contexts/ThemeContext"
 import { useState } from "react"
+import { useAuthStore } from "@/store/Auth"
+import axios from "axios"
 
 export default function ProfileLayout({ children }: { children: React.ReactNode }) {
-  const { user, logout } = useAuth()
-  const { theme, toggleTheme } = useTheme()
+  const { user } = useAuthStore()
   const router = useRouter()
   const pathname = usePathname()
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
-  useEffect(() => {
-    if (!user) {
-      router.push("/login")
-      return
-    }
+    const handleLogout = async() => {
+    const { data } = await axios.get("/api/auth/logout")
 
+    if (data.success) {
+      router.replace("/login")
+    }
+  }
+
+  useEffect(() => {
     // Redirect to personal info if on base profile route
     if (pathname === "/profile") {
       router.push("/profile/personal")
     }
   }, [user, router, pathname])
 
-  const handleDeleteAccount = () => {
-    // In a real app, this would call an API to delete the account
-    console.log("Account deletion requested")
-    setShowDeleteDialog(false)
-    logout()
-    router.push("/")
-  }
 
   if (!user) {
     return null
@@ -105,7 +87,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
                       <User className="h-8 w-8 sm:h-10 sm:w-10 text-primary-foreground" />
                     </div>
                     <CardTitle className="text-base sm:text-lg text-card-foreground">
-                      {user.firstName} {user.lastName}
+                      {user.name}
                     </CardTitle>
                     <p className="text-xs sm:text-sm text-muted-foreground truncate">{user.email}</p>
                   </CardHeader>
@@ -130,7 +112,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
 
                       {/* Logout */}
                       <button
-                        onClick={logout}
+                        onClick={handleLogout}
                         className="w-full flex items-center px-2 sm:px-3 py-2 text-left text-xs sm:text-sm font-medium rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                       >
                         <LogOut className="mr-2 sm:mr-3 h-4 w-4 flex-shrink-0" />

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Search, Grid, List, Filter, ChevronLeft, ChevronRight, ShoppingCart, Plus, Minus, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,162 +10,26 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
-import Navigation from "@/components/Navigation"
-import Footer from "@/components/Footer"
 import ProductModal from "@/components/ProductModal"
 import ProductReviews from "@/components/ProductReviews"
 import { useCart } from "@/contexts/CartContext"
 import { useReviews } from "@/contexts/ReviewContext"
+import axios from "axios"
 
-const products = [
-  {
-    id: 1,
-    name: "Paracetamol 500mg",
-    category: "Tablets",
-    price: 12.99,
-    image: "/medicine.jpg",
-    inStock: true,
-    brand: "HealthCare Plus",
-    description: "Effective pain relief and fever reducer. Suitable for adults and children over 12 years.",
-    usage: "Take 1-2 tablets every 4-6 hours as needed. Do not exceed 8 tablets in 24 hours.",
-    ingredients: "Paracetamol 500mg",
-  },
-  {
-    id: 2,
-    name: "Cough Syrup",
-    category: "Syrups",
-    price: 8.5,
-    image: "/medicine.jpg",
-    inStock: true,
-    brand: "MediCare",
-    description: "Soothing cough syrup for dry and productive coughs. Cherry flavored.",
-    usage: "Adults: 10ml every 4 hours. Children 6-12 years: 5ml every 4 hours.",
-    ingredients: "Dextromethorphan, Guaifenesin, Menthol",
-  },
-  {
-    id: 3,
-    name: "Vitamin D3",
-    category: "Supplements",
-    price: 15.75,
-    image: "/medicine.jpg",
-    inStock: false,
-    brand: "VitaLife",
-    description: "Essential vitamin D3 supplement for bone health and immune support.",
-    usage: "Take 1 capsule daily with food or as directed by healthcare provider.",
-    ingredients: "Cholecalciferol (Vitamin D3) 1000 IU",
-  },
-  {
-    id: 4,
-    name: "Antiseptic Cream",
-    category: "Topical",
-    price: 6.25,
-    image: "/medicine.jpg",
-    inStock: true,
-    brand: "SkinCare Pro",
-    description: "Antiseptic cream for minor cuts, scrapes, and burns. Prevents infection.",
-    usage: "Clean affected area and apply thin layer 2-3 times daily.",
-    ingredients: "Chlorhexidine gluconate, Cetrimide",
-  },
-  {
-    id: 5,
-    name: "Ibuprofen 400mg",
-    category: "Tablets",
-    price: 9.99,
-    image: "/medicine.jpg",
-    inStock: true,
-    brand: "PainRelief Co",
-    description: "Anti-inflammatory pain reliever for headaches, muscle pain, and arthritis.",
-    usage: "Take 1 tablet every 6-8 hours with food. Maximum 3 tablets per day.",
-    ingredients: "Ibuprofen 400mg",
-  },
-  {
-    id: 6,
-    name: "Multivitamin",
-    category: "Supplements",
-    price: 22.5,
-    image: "/medicine.jpg",
-    inStock: true,
-    brand: "VitaLife",
-    description: "Complete daily multivitamin with essential vitamins and minerals.",
-    usage: "Take 1 tablet daily with breakfast.",
-    ingredients: "Vitamins A, C, D, E, B-complex, Iron, Calcium, Zinc",
-  },
-  {
-    id: 7,
-    name: "Aspirin 325mg",
-    category: "Tablets",
-    price: 7.99,
-    image: "/medicine.jpg",
-    inStock: true,
-    brand: "CardioHealth",
-    description: "Low-dose aspirin for heart health and pain relief.",
-    usage: "Take 1 tablet daily with food or as directed by physician.",
-    ingredients: "Acetylsalicylic acid 325mg",
-  },
-  {
-    id: 8,
-    name: "Allergy Relief",
-    category: "Tablets",
-    price: 14.25,
-    image: "/medicine.jpg",
-    inStock: true,
-    brand: "AllergyFree",
-    description: "24-hour allergy relief for seasonal and indoor allergies.",
-    usage: "Take 1 tablet once daily. Do not exceed recommended dose.",
-    ingredients: "Loratadine 10mg",
-  },
-  {
-    id: 9,
-    name: "Throat Lozenges",
-    category: "Lozenges",
-    price: 5.99,
-    image: "/medicine.jpg",
-    inStock: true,
-    brand: "SootheCare",
-    description: "Honey and menthol throat lozenges for sore throat relief.",
-    usage: "Dissolve 1 lozenge slowly in mouth every 2 hours as needed.",
-    ingredients: "Menthol, Honey, Eucalyptus oil",
-  },
-  {
-    id: 10,
-    name: "Calcium Tablets",
-    category: "Supplements",
-    price: 18.99,
-    image: "/medicine.jpg",
-    inStock: false,
-    brand: "BoneStrong",
-    description: "Calcium supplement with Vitamin D for bone health.",
-    usage: "Take 2 tablets daily with meals.",
-    ingredients: "Calcium carbonate 600mg, Vitamin D3 400 IU",
-  },
-  {
-    id: 11,
-    name: "Eye Drops",
-    category: "Drops",
-    price: 11.5,
-    image: "/medicine.jpg",
-    inStock: true,
-    brand: "ClearVision",
-    description: "Lubricating eye drops for dry eyes and irritation.",
-    usage: "Instill 1-2 drops in affected eye(s) as needed.",
-    ingredients: "Polyethylene glycol, Propylene glycol",
-  },
-  {
-    id: 12,
-    name: "Antacid Tablets",
-    category: "Tablets",
-    price: 8.75,
-    image: "/medicine.jpg",
-    inStock: true,
-    brand: "DigestEase",
-    description: "Fast-acting antacid for heartburn and indigestion relief.",
-    usage: "Chew 2-4 tablets as symptoms occur. Maximum 16 tablets per day.",
-    ingredients: "Calcium carbonate 750mg",
-  },
-]
+interface Product {
+  id: number
+  name: string
+  category: string
+  price: number
+  image: string
+  inStock: boolean
+  brand: string
+  description: string
+  usage: string
+  ingredients: string
+}
 
 const categories = ["All", "Tablets", "Syrups", "Supplements", "Topical", "Lozenges", "Drops"]
-const brands = ["All", ...Array.from(new Set(products.map((p) => p.brand)))]
 const sortOptions = [
   { value: "name-asc", label: "Name (A-Z)" },
   { value: "name-desc", label: "Name (Z-A)" },
@@ -177,20 +41,52 @@ const sortOptions = [
 const ITEMS_PER_PAGE = 9
 
 export default function ProductsPage() {
+  const [products, setProducts] = useState<(Product)[]>([])
+
+  const [isLoading, setIsLoading] = useState(true)
+
+  const [brands, setBrands] = useState<any[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [selectedBrands, setSelectedBrands] = useState<string[]>([])
   const [priceRange, setPriceRange] = useState([0, 50])
   const [stockFilter, setStockFilter] = useState("all")
   const [sortBy, setSortBy] = useState("name-asc")
-  const [selectedProduct, setSelectedProduct] = useState<(typeof products)[0] | null>(null)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [showFilters, setShowFilters] = useState(false)
   const [quantities, setQuantities] = useState<{ [key: number]: number }>({})
   const [showReviews, setShowReviews] = useState<{ [key: number]: boolean }>({})
 
   const { addToCart } = useCart()
-  const { getAverageRating } = useReviews()
+  const { getAverageRating } = useReviews()  
+
+
+
+  useEffect(() => {
+    console.log("hello prdoducts")
+    const getProducts = async () => {
+
+      console.log("hello function")
+      try {
+        const { data } = await axios.get("/api/store/products/get")
+        if (data.success) {
+          setProducts(data.products)
+          setBrands(["All", ...Array.from(new Set(data.products.map((p: Product) => p.brand)))])
+          setIsLoading(false)
+        } else {
+          console.error("Failed to fetch products:", data.error)
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error)
+      }      
+    }
+
+    getProducts()
+  }, [])
+
+
+  
 
   const filteredAndSortedProducts = useMemo(() => {
     const filtered = products.filter((product) => {
@@ -229,7 +125,7 @@ export default function ProductsPage() {
     })
 
     return filtered
-  }, [searchTerm, selectedCategories, selectedBrands, priceRange, stockFilter, sortBy, getAverageRating])
+  }, [searchTerm, selectedCategories, selectedBrands, priceRange, stockFilter, sortBy, getAverageRating, products])
 
   const totalPages = Math.ceil(filteredAndSortedProducts.length / ITEMS_PER_PAGE)
   const paginatedProducts = filteredAndSortedProducts.slice(
@@ -279,6 +175,17 @@ export default function ProductsPage() {
     setShowReviews({ ...showReviews, [productId]: !showReviews[productId] })
   }
 
+    if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-lg text-muted-foreground">
+          Loading products...
+          <span className="loading loading-dots loading-xl"></span>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
 
@@ -295,7 +202,7 @@ export default function ProductsPage() {
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Enhanced Filters Sidebar */}
             <div className={`lg:w-80 ${showFilters ? "block" : "hidden lg:block"}`}>
-              <Card className="sticky top-20 border-border bg-gray-100 dark:bg-[#181818]">
+              <Card className="sticky top-24 h-[46rem] overflow-y-scroll border-border bg-gray-100 dark:bg-[#181818]">
                 <CardContent className="p-4 sm:p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-base sm:text-lg font-semibold text-card-foreground">Filters</h2>

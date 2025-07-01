@@ -46,7 +46,7 @@ export default function HomePage() {
             <div className="relative order-first lg:order-last">
               <div className=" rounded-2xl shadow-2xl shadow-blue-300 h-[28rem]">
                 <img
-                  src="/medicine_img.jpg"
+                  src="/images/medicine_img.jpg"
                   alt="HealthPlus Pharmacy Interior"
                   className="h-full w-full rounded-2xl object-cover"
                 />

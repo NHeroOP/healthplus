@@ -1,10 +1,22 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useRouter, usePathname } from "next/navigation"
-import { LayoutDashboard, Package, Users, BarChart3, Settings, LogOut, Menu, X, ShoppingCart, Moon, Sun } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useTheme } from "@/contexts/ThemeContext"
+import { useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import {
+  LayoutDashboard,
+  Package,
+  Users,
+  BarChart3,
+  Settings,
+  LogOut,
+  Menu,
+  X,
+  ShoppingCart,
+  Moon,
+  Sun,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useTheme } from "@/components/ThemeProvider";
 
 const navigation = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -13,29 +25,42 @@ const navigation = [
   { name: "Customers", href: "/admin/customers", icon: Users },
   { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
   { name: "Settings", href: "/admin/settings", icon: Settings },
-]
+];
 
 export default function AdminSidebar() {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const router = useRouter()
-  const pathname = usePathname()
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const { theme, toggleTheme } = useTheme()
+  const { theme, toggleTheme } = useTheme();
 
   const handleLogout = () => {
-    localStorage.removeItem("adminLoggedIn")
-    router.push("/admin/login")
-  }
+    localStorage.removeItem("adminLoggedIn");
+    router.push("/admin/login");
+  };
 
   return (
     <>
       {/* Mobile sidebar */}
-      <div className={`fixed inset-0 z-50 lg:hidden ${sidebarOpen ? "block" : "hidden"}`}>
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
+      <div
+        className={`fixed inset-0 z-50 lg:hidden ${
+          sidebarOpen ? "block" : "hidden"
+        }`}
+      >
+        <div
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm"
+          onClick={() => setSidebarOpen(false)}
+        />
         <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-card border-r border-border">
           <div className="flex h-16 items-center justify-between px-4 border-b border-border">
-            <h2 className="text-lg font-semibold text-card-foreground">HealthPlus Admin</h2>
-            <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(false)}>
+            <h2 className="text-lg font-semibold text-card-foreground">
+              HealthPlus Admin
+            </h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSidebarOpen(false)}
+            >
               <X className="h-5 w-5" />
             </Button>
           </div>
@@ -72,7 +97,9 @@ export default function AdminSidebar() {
       <div className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0">
         <div className="flex flex-col flex-grow bg-card border-r border-border">
           <div className="flex items-center h-16 px-4 border-b border-border">
-            <h2 className="text-lg font-semibold text-card-foreground">HealthPlus Admin</h2>
+            <h2 className="text-lg font-semibold text-card-foreground">
+              HealthPlus Admin
+            </h2>
           </div>
           <nav className="flex-1 px-4 py-4 space-y-2">
             {navigation.map((item) => (
@@ -109,7 +136,7 @@ export default function AdminSidebar() {
                 </>
               )}
             </Button>
-            
+
             {/* Logout Button */}
             <Button
               variant="outline"
@@ -125,10 +152,15 @@ export default function AdminSidebar() {
 
       {/* Mobile menu button */}
       <div className="lg:hidden">
-        <Button variant="ghost" size="sm" className="fixed top-4 left-4 z-40" onClick={() => setSidebarOpen(true)}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="fixed top-4 left-4 z-40"
+          onClick={() => setSidebarOpen(true)}
+        >
           <Menu className="h-5 w-5" />
         </Button>
       </div>
     </>
-  )
+  );
 }

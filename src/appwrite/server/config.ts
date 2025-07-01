@@ -1,4 +1,6 @@
+import { SESSION_COOKIE } from '@/const';
 import env from '@/env';
+import { cookies } from 'next/headers';
 import { Client, Storage, Databases, Users, Avatars, Account } from 'node-appwrite';
 
 export async function createSessionClient(session: any) {
@@ -7,7 +9,6 @@ export async function createSessionClient(session: any) {
     .setEndpoint(env.appwrite.endpoint)
     .setProject(env.appwrite.projectId);
   
-
   if (!session || !session.value) {
     throw new Error("No session found");
   }
@@ -57,4 +58,17 @@ export async function createAdminClient() {
       return new Avatars(client);
     },
   };
+}
+
+export async function getLoggedInUser() {
+  try {
+    const session = (await cookies()).get(SESSION_COOKIE);
+
+    const { account } = await createSessionClient(session)
+    const user = await account.get()
+    
+    return user;
+  } catch (err) {
+    return null;
+  }
 }

@@ -22,8 +22,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { useAuth } from "../contexts/AuthContext";
 import { useReviews } from "../contexts/ReviewContext";
+import { useAuthStore } from "@/store/Auth";
 
 interface ReviewModalProps {
   productId: number;
@@ -38,7 +38,7 @@ export default function ReviewModal({
   isOpen,
   onClose,
 }: ReviewModalProps) {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const { addReview } = useReviews();
   const [formData, setFormData] = useState({
     rating: 5,
@@ -62,7 +62,7 @@ export default function ReviewModal({
 
       addReview({
         productId,
-        userId: user.id,
+        userId: Number(user.id),
         userName: `${user.firstName} ${user.lastName.charAt(0)}.`,
         rating: formData.rating,
         title: formData.title,

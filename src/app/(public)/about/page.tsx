@@ -43,7 +43,7 @@ export default function AboutPage() {
               </div>
               <div className="relative order-1 lg:order-2">
                 <img
-                  src="/team.jpg"
+                  src="/images/team.jpg"
                   width={500}
                   height={400}
                   alt="HealthPlus Pharmacy Team"

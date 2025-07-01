@@ -4,10 +4,10 @@ import { Pill, MapPin, Phone, Mail, Clock, Facebook, Twitter, Instagram } from "
 export default function Footer() {
   return (
     <footer className="bg-zinc-100 dark:bg-zinc-950 text-white">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-8 lg:grid-cols-4">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="py-10 grid gap-8 sm:grid-cols-3 md:grid-cols-4">
           {/* Brand */}
-          <div className="lg:col-span-1">
+          <div className="sm:col-span-3 md:col-span-1">
             <Link href="/" className="flex items-center space-x-2 mb-4">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600">
                 <Pill className="h-6 w-6 text-white" />
@@ -18,17 +18,6 @@ export default function Footer() {
               Your trusted local pharmacy, serving the community with quality healthcare products and personalized
               service since 2008.
             </p>
-            <div className="flex space-x-4">
-              <a href="#" className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors">
-                <Facebook className="h-5 w-5" />
-              </a>
-              <a href="#" className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors">
-                <Twitter className="h-5 w-5" />
-              </a>
-              <a href="#" className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors">
-                <Instagram className="h-5 w-5" />
-              </a>
-            </div>
           </div>
 
           {/* Quick Links */}
@@ -116,7 +105,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-blue-400 flex-shrink-0" />
-                <span className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 text-sm">info@healthpluspharmacy.com</span>
+                <span className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 text-sm">info@healthplus.com</span>
               </li>
               <li className="flex items-start space-x-3">
                 <Clock className="h-5 w-5 text-blue-400 mt-0.5 flex-shrink-0" />
@@ -130,21 +119,28 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-black/50 dark:border-white/50">
+        <div className="py-4 border-t border-black/50 dark:border-white/50">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-center text-gray-600 dark:text-gray-400 text-sm">
-              © 2024 HealthPlus Pharmacy. All rights reserved.
-            </p>
+            <div className="flex items-center gap-2">
+              <Link href="/" className="flex items-center space-x-2">
+                <div className="flex p-2 items-center justify-center rounded-full bg-blue-600">
+                  <Pill className="h-6 w-6 text-white" />
+                </div>
+              </Link>
+              <p className="text-center text-gray-600 dark:text-gray-400 text-sm">
+                &copy; {new Date().getFullYear()} HealthPlus Pharmacy. All rights reserved.
+              </p>
+            </div>
             <div className="mt-4 md:mt-0 flex space-x-6">
-              <Link href="/privacy" className="text-gray-600 dark:text-gray-400 hover:text-white text-sm transition-colors">
-                Privacy
-              </Link>
-              <Link href="/terms" className="text-gray-600 dark:text-gray-400 hover:text-white text-sm transition-colors">
-                Terms
-              </Link>
-              <Link href="/accessibility" className="text-gray-600 dark:text-gray-400 hover:text-white text-sm transition-colors">
-                Accessibility
-              </Link>
+              <a href="#" className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors">
+                <Facebook className="h-5 w-5" />
+              </a>
+              <a href="#" className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors">
+                <Twitter className="h-5 w-5" />
+              </a>
+              <a href="#" className="dark:text-gray-400 text-gray-600 dark:hover:text-white hover:text-gray-800 transition-colors">
+                <Instagram className="h-5 w-5" />
+              </a>
             </div>
           </div>
         </div>

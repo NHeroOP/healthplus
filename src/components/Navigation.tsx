@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Menu,
   X,
@@ -15,16 +15,19 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useCart } from "../contexts/CartContext";
-import { useAuth } from "../contexts/AuthContext";
-import { useTheme } from "../contexts/ThemeContext";
+import { useCart } from "@/contexts/CartContext";
+import { useTheme } from "next-themes";
+import { useAuthStore } from "@/store/Auth";
+import axios from "axios";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { items } = useCart();
-  const { user, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
+  const { user } = useAuthStore()
+  const { theme, setTheme } = useTheme();
   const pathname = usePathname();
+  const router = useRouter();
+
 
   const itemCount = items.reduce((total, item) => total + item.quantity, 0);
 
@@ -41,6 +44,18 @@ export default function Navigation() {
     }
     return pathname.startsWith(href);
   };
+
+  const toggleTheme = () => {
+    setTheme(() => theme === 'light' ? 'dark' : 'light')
+  }
+
+  const handleLogout = async() => {
+    const { data } = await axios.get("/api/auth/logout")
+
+    if (data.success) {
+      router.replace("/login")
+    }
+  }
 
   return (
     <nav className="bg-background dark:bg-neutral-900 md:bg-background/95 md:dark:bg-neutral-900/95 border-b border-border sticky top-0 z-50">
@@ -109,7 +124,7 @@ export default function Navigation() {
 
             {user ? (
               <div className="flex items-center space-x-2">
-                <Link href="/profile">
+                <Link href="/profile/personal">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -122,7 +137,7 @@ export default function Navigation() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={logout}
+                  onClick={handleLogout}
                   className="text-muted-foreground hover:text-foreground"
                 >
                   Logout
@@ -227,7 +242,7 @@ export default function Navigation() {
                     </Link>
                     <button
                       onClick={() => {
-                        logout();
+                        handleLogout();
                         setIsMenuOpen(false);
                       }}
                       className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-foreground hover:bg-muted w-full text-left"

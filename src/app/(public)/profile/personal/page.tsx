@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useAuth } from "@/contexts/AuthContext"
+import { useAuthStore } from "@/store/Auth"
 
 export default function PersonalInfoPage() {
-  const { user, updateProfile } = useAuth()
+  const { user, updateProfile } = useAuthStore()
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState({
     firstName: "",
@@ -24,11 +24,12 @@ export default function PersonalInfoPage() {
     emergencyContact: "",
   })
 
+
   useEffect(() => {
     if (user) {
       setFormData({
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
+        firstName: user.name || "",
+        lastName: user.name || "",
         email: user.email || "",
         phone: user.phone || "",
         address: user.address || "",
