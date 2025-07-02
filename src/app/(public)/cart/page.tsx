@@ -160,7 +160,7 @@ export default function CartPage() {
                   <CardContent className="p-3 sm:p-4 lg:p-6">
                     <div className="flex gap-3 sm:gap-4">
                       <img
-                        src={item.image || "/placeholder.svg"}
+                        src={item.image || "https://placehold.co/80x80.png?text=No+Image"}
                         alt={item.name}
                         className="h-16 w-16 sm:h-20 sm:w-20 rounded-lg object-cover flex-shrink-0"
                       />
