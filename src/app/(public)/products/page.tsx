@@ -159,10 +159,27 @@ export default function ProductsPage() {
     }
   }
 
-  const handleAddToCart = (product: any) => {
+  const handleAddToCart = async (product: any) => {
+    if (!product.inStock) {
+      alert("This product is out of stock.")
+      return
+    }
+
     const quantity = quantities[product.id] || 1
-    addToCart(product, quantity)
-    setQuantities({ ...quantities, [product.id]: 1 })
+    const { data: respData } = await axios.post("/api/store/cart", {
+      id: product.id,
+      quantity
+    })
+
+    if (respData.success) {
+      addToCart(product, quantity)
+      setQuantities({ ...quantities, [product.id]: 1 }) // Reset quantity after adding to cart
+      alert("Product added to cart successfully!")
+    } else {
+      console.error("Failed to add product to cart:", respData.error)
+      alert("Failed to add product to cart. Please try again.")
+    }
+
   }
 
   const updateQuantity = (productId: number, change: number) => {
@@ -444,7 +461,7 @@ export default function ProductsPage() {
                                   </div>
                                   <Button
                                     size="sm"
-                                    onClick={() => handleAddToCart(product)}
+                                    onClick={async() => handleAddToCart(product)}
                                     className="flex-1"
                                     disabled={!product.inStock}
                                   >

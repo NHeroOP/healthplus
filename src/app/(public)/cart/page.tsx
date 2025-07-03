@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { use, useEffect, useState } from "react"
 import Link from "next/link"
 import { ArrowLeft, Plus, Minus, Trash2, ShoppingBag, Truck, Shield, Tag, Gift } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -10,6 +10,17 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { useCart } from "@/contexts/CartContext"
 import { toast, useSonner } from "sonner"
+import axios from "axios"
+import { useRouter } from "next/navigation"
+
+interface CartItem { 
+  id: number
+  name: string
+  category: string
+  price: number
+  image?: string
+  quantity: number
+}
 
 const PROMO_CODES = {
   HEALTH10: { discount: 0.1, description: "10% off your order" },
@@ -19,13 +30,16 @@ const PROMO_CODES = {
 }
 
 export default function CartPage() {
-  const { items, updateQuantity, removeFromCart, getTotalPrice, clearCart } = useCart()
+  const { updateQuantity, removeFromCart, clearCart } = useCart()
+  const [items, setItems] = useState<CartItem[]>([])
   const [promoCode, setPromoCode] = useState("")
   const [appliedPromo, setAppliedPromo] = useState<string | null>(null)
   const [promoError, setPromoError] = useState("")
-  const { toasts } = useSonner()
-  
-  const subtotal = getTotalPrice()
+
+  const [isLoading, setIsLoading] = useState(true)
+  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false)
+
+  const [subtotal, setsubtotal] = useState(0)
   const promoDiscount = appliedPromo ? calculatePromoDiscount(subtotal, appliedPromo) : 0
   const shipping = appliedPromo === "FREESHIP" || subtotal > 50 ? 0 : 5.99
   const tax = (subtotal - promoDiscount) * 0.08
@@ -44,20 +58,42 @@ export default function CartPage() {
     }
   }
 
-  const handleQuantityChange = (id: number, newQuantity: number) => {
+  const handleQuantityChange = async (id: number, newQuantity: number) => {
     if (newQuantity < 1) {
-      removeFromCart(id)
-      toast("Item removed", {
-        description: "Item has been removed from your cart",
-      })
+      try {
+        removeFromCart(id)
+        const { data } = await axios.put("/api/store/cart", { id })
+        setItems((prev) => prev.filter((item) => item.id !== id))
+        toast.success("Item removed", {
+          description: "Item has been removed from your cart",
+        })
+        
+      } catch (error) {
+        toast.error("Failed to update quantity")
+        return
+      }
     } else {
-      updateQuantity(id, newQuantity)
+      try {
+        updateQuantity(id, newQuantity)
+        const { data } = await axios.put("/api/store/cart", { id, quantity: newQuantity })
+        setItems((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, quantity: newQuantity } : item
+        ))
+        toast.success("Quantity updated", {
+          description: `Quantity for item has been updated to ${newQuantity}`,
+        })
+      } catch (error) {
+        toast.error("Failed to update quantity")
+      }
     }
   }
 
-  const handleRemoveItem = (id: number, name: string) => {
+  const handleRemoveItem = async(id: number, name: string) => {
+    setItems((prev) => prev.filter((item) => item.id !== id))
     removeFromCart(id)
-    toast("Item removed",{
+    const { data } = await axios.put("/api/store/cart", { id })
+    toast.success("Item removed",{
       description: `${name} has been removed from your cart`,
     })
   }
@@ -89,6 +125,49 @@ export default function CartPage() {
     toast.warning("Promo code removed", {
       description: "Promo code has been removed from your order",
     })
+  }
+
+  const handleClearCart = async () => {
+    try {
+      await axios.delete("/api/store/cart")
+      toast.success("Cart cleared")
+    } catch (err) {
+      toast.error("Failed to clear cart")
+    }
+  }
+
+
+  useEffect(() => {
+    setIsLoading(true)
+    const getCartAndTotalPrice = async () => {
+      try {
+        const { data } = await axios.get("/api/store/cart")
+        const priceArr = data.items.map((item: any) => (item.price * item.quantity))
+        const totalPrice = priceArr.reduce((total: number, i: number) => total + i)
+        setsubtotal(totalPrice)
+        setItems(data.items || [])
+      } catch (err) {
+        setItems([])
+        setsubtotal(0)
+      }
+      finally {
+        setIsLoading(false)
+      }
+    }
+
+    getCartAndTotalPrice()
+  }, [])
+
+  if (isLoading) { 
+    return (
+      <div className="flex items-center justify-center h-screen fixed z-[100] bg-black/50 w-full">
+        <div className="text-muted-foreground text-sm sm:text-base">
+          Loading your cart... &nbsp;
+          <span className="loading loading-ring loading-xl"></span>
+        </div>
+      </div>
+    )
+
   }
 
   if (items.length === 0) {
@@ -176,7 +255,7 @@ export default function CartPage() {
                                 In Stock
                               </Badge>
                               <span className="text-xs sm:text-sm font-medium text-primary">
-                                ${item.price.toFixed(2)}
+                                ${Number(item.price).toFixed(2)}
                               </span>
                             </div>
                           </div>
@@ -316,20 +395,18 @@ export default function CartPage() {
                 )}
 
                 <div className="space-y-2">
-                  <Link href="/checkout">
-                    <Button className="w-full" size="lg">
+                  <form action="/api/checkout" method="GET" onClick={() => setIsCheckoutLoading(true)}>
+                    <Button
+                      className="w-full"
+                      size="lg"
+                    >
                       Proceed to Checkout
                     </Button>
-                  </Link>
+                  </form>
                   <Button
                     variant="outline"
                     className="w-full bg-transparent text-sm"
-                    onClick={() => {
-                      clearCart()
-                      toast("Cart cleared", {
-                        description: "All items have been removed from your cart",
-                      })
-                    }}
+                    onClick={handleClearCart}
                   >
                     Clear Cart
                   </Button>
@@ -351,6 +428,15 @@ export default function CartPage() {
           </div>
         </div>
       </div>
+
+      {isCheckoutLoading && (
+        <div className="flex items-center justify-center h-screen fixed z-[100] bg-black/50 w-full">
+          <div className="text-muted-foreground text-sm sm:text-base">
+            Processing your order... &nbsp;
+            <span className="loading loading-ring loading-xl"></span>
+          </div>
+        </div>
+      )}
 
     </>
   )

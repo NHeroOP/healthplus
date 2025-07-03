@@ -40,7 +40,6 @@ import { useAuthStore } from "@/store/Auth"
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false)
-  const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [showPassword, setShowPassword] = useState(false)
 

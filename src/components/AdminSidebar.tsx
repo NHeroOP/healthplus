@@ -16,7 +16,7 @@ import {
   Sun,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "@/components/ThemeProvider";
+import { useTheme } from "next-themes";
 
 const navigation = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -32,7 +32,10 @@ export default function AdminSidebar() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { theme, toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
+  const toggleTheme = () => {
+    setTheme(() => theme === 'light' ? 'dark' : 'light')
+  }
 
   const handleLogout = () => {
     localStorage.removeItem("adminLoggedIn");

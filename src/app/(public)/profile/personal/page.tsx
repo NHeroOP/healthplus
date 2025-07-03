@@ -32,12 +32,12 @@ export default function PersonalInfoPage() {
         lastName: user.name || "",
         email: user.email || "",
         phone: user.phone || "",
-        address: user.address || "",
-        city: user.city || "",
-        state: user.state || "",
-        zipCode: user.zipCode || "",
-        dateOfBirth: user.dateOfBirth || "",
-        emergencyContact: user.emergencyContact || "",
+        address: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        dateOfBirth: "",
+        emergencyContact: "",
       })
     }
   }, [user])

@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       }, { status: 401 });
     }
 
-    const { item } = await req.json();
+    const item = await req.json();
 
     if (!item || !item.id || !item.quantity) {
       return NextResponse.json({
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     let cartItems = [];
     const cart = (await cookies()).get(CART_COOKIE);
 
-    if (cart) {
+    if (cart && cart.value) {
       cartItems = JSON.parse(cart.value);
       const existingItemIndex = cartItems.findIndex((i: any) => i.id === item.id);
 
@@ -42,7 +42,6 @@ export async function POST(req: NextRequest) {
       cartItems = [item];
     }
 
-
     (await cookies()).set(CART_COOKIE, JSON.stringify(cartItems), {
       path: "/",
       httpOnly: true,
@@ -51,6 +50,12 @@ export async function POST(req: NextRequest) {
       expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
     });
 
+
+    return NextResponse.json({
+      success: true,
+      message: "Item added to cart successfully.",  
+      error: null,
+    }, { status: 200})
 
   } catch (err) {
     console.log("Error in POST /api/store/cart:", err);
@@ -64,7 +69,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   try {
-        const user = await getLoggedInUser();
+    const user = await getLoggedInUser();
     const session = (await cookies()).get(SESSION_COOKIE);
 
     if (!user || !session) {
@@ -76,7 +81,7 @@ export async function GET() {
 
     const cart = (await cookies()).get(CART_COOKIE);
 
-    if (!cart) {
+    if (!cart || !cart.value) {
       return NextResponse.json({
         success: true,
         items: [],
@@ -102,14 +107,15 @@ export async function GET() {
     // }
 
     products = await Promise.all(products);
+
     const productsObj = products.map((product: any) => (
       {
         id: product.$id,
         name: product.name,
-        description: product.description,
+        category: product.category,
         price: product.price,
         image: product.image,
-        quanity: cartItems.find((cartItem: any) => cartItem.id === product.$id)?.quantity || 1,
+        quantity: cartItems.find((cartItem: any) => cartItem.id.toString() === product.$id)?.quantity || 1,
       }
     ))
 
@@ -127,6 +133,70 @@ export async function GET() {
     }, { status: 500 });
   }
 }
+
+export async function PUT(req: NextRequest) {
+  try {
+    const user = await getLoggedInUser();
+    const session = (await cookies()).get(SESSION_COOKIE);
+
+    if (!user || !session) {
+      return NextResponse.json({
+        success: false,
+        error: "User not authenticated.",
+      }, { status: 401 });
+    }
+
+    const item = await req.json()
+    const cart = (await cookies()).get(CART_COOKIE);
+
+    if (!cart) {
+      return NextResponse.json({
+        success: false,
+        error: "Cart is empty.",
+      }, { status: 400 });
+    }
+    
+    const cartItems = JSON.parse(cart.value)
+    const existingItemIndex = cartItems.findIndex((i: any) => i.id.toString() === item.id);
+
+
+    if (existingItemIndex === -1) {
+      return NextResponse.json({
+        success: false,
+        error: "Item not found in the cart.",
+      }, { status: 404 });
+    }
+    
+    if (!item.quantity) {
+      cartItems.splice(existingItemIndex, 1);
+    } else {
+      cartItems[existingItemIndex].quantity = item.quantity;
+    }
+
+    (await cookies()).set(CART_COOKIE, JSON.stringify(cartItems), {
+      path: "/",
+      httpOnly: true,
+      sameSite: "strict",
+      secure: true,
+      expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+    });
+
+
+    return NextResponse.json({
+      success: true,
+      items: cartItems,
+      error: null,
+    }, { status: 200 });
+
+  } catch (err) {
+    console.log("Error in PUT /api/store/cart:", err);
+    return NextResponse.json({
+      success: false,
+      error: "An error occurred while updating the cart.",
+    }, { status: 500 });
+  }
+}
+
 
 export async function DELETE(req: NextRequest) {
   try {

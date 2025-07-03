@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 import { getLoggedInUser } from '@/appwrite/server/config'
+import { SESSION_COOKIE } from './const'
 
 let isDbInitialized = false
 let isStorageInitialized = false
@@ -11,7 +12,6 @@ export async function middleware(req: NextRequest) {
   const url = req.nextUrl
   const user = await getLoggedInUser()
   
-  console.log("hello", url.pathname)
 
   if (!user && !["/login", "/register", "/verify", "/", "/about", "/faq"].includes(url.pathname)) {
     return NextResponse.redirect(new URL("/login", url))

@@ -23,8 +23,8 @@ export default function HealthInfoPage() {
   useEffect(() => {
     if (user) {
       setFormData({
-        allergies: user.allergies || [],
-        medications: user.medications || [],
+        allergies: [],
+        medications: [],
       })
     }
   }, [user])

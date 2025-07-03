@@ -13,9 +13,9 @@ import { Separator } from "@/components/ui/separator"
 import Navigation from "@/components/Navigation"
 import Footer from "@/components/Footer"
 import { useCart } from "@/contexts/CartContext"
-import { useAuth } from "@/contexts/AuthContext"
 import ProductFAQ from "@/components/ProductFAQ"
 import ProductReviews from "@/components/ProductReviews"
+import { useAuthStore } from "@/store/Auth"
 
 // Extended product data with detailed medicine information
 const medicineData = {
@@ -104,7 +104,7 @@ export default function MedicinePage() {
   const params = useParams()
   const router = useRouter()
   const { addToCart } = useCart()
-  const { user } = useAuth()
+  const { user } = useAuthStore()
   const [quantity, setQuantity] = useState(1)
   const medicineId = Number.parseInt(params.id as string)
   const medicine = medicineData[medicineId as keyof typeof medicineData]

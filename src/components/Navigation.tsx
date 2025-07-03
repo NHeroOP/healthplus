@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -15,21 +15,18 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useCart } from "@/contexts/CartContext";
 import { useTheme } from "next-themes";
 import { useAuthStore } from "@/store/Auth";
 import axios from "axios";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { items } = useCart();
   const { user } = useAuthStore()
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
 
-
-  const itemCount = items.reduce((total, item) => total + item.quantity, 0);
+  const [itemCount, setItemCount] = useState(0);
 
   const navItems = [
     { href: "/", label: "Home" },
@@ -37,6 +34,7 @@ export default function Navigation() {
     { href: "/about", label: "About" },
     { href: "/faq", label: "FAQ", icon: HelpCircle },
   ];
+
 
   const isActive = (href: string) => {
     if (href === "/") {
@@ -56,6 +54,21 @@ export default function Navigation() {
       router.replace("/login")
     }
   }
+
+  useEffect(() => {
+    const fetchCartItemCount = async () => {
+      try {
+        const { data } = await axios.get("/api/store/cart")
+        const quantityArr = data.items.map((item: any) =>  item.quantity)
+        const total = quantityArr.reduce((total: number, i: number) => total + i)
+        setItemCount(total)
+      } catch (err) {
+        setItemCount(0)
+      }
+    }
+
+    fetchCartItemCount()
+  }, [])
 
   return (
     <nav className="bg-background dark:bg-neutral-900 md:bg-background/95 md:dark:bg-neutral-900/95 border-b border-border sticky top-0 z-50">

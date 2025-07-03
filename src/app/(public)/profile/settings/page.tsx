@@ -98,7 +98,7 @@ export default function SettingsPage() {
                 Account Status
               </h4>
               <p className="text-xs sm:text-sm text-muted-foreground">
-                Member since {user.joinDate ? new Date(user.joinDate).toLocaleDateString() : "N/A"}
+                Member since 2025-03-07
               </p>
             </div>
             <Badge variant="secondary" className="text-xs w-fit">

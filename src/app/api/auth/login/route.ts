@@ -15,8 +15,8 @@ export async function POST(req: NextRequest) {
     (await cookies()).set(SESSION_COOKIE, session.secret, {
       path: "/",
       httpOnly: true,
-      sameSite: "strict",
-      secure: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
       expires: new Date(session.expire),
     });
 
