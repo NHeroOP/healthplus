@@ -18,6 +18,7 @@ export async function POST(req: NextRequest) {
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
       expires: new Date(session.expire),
+      domain: `.${process.env.DOMAIN}` || "localhost"
     });
 
     const user = await getLoggedInUser();
