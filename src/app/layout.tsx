@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { CartProvider } from "@/contexts/CartContext";
 import { ReviewProvider } from "@/contexts/ReviewContext";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -26,10 +25,8 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider>
           <ReviewProvider>
-            <CartProvider>
-              {children}
-              <Toaster richColors />
-            </CartProvider>
+            {children}
+            <Toaster richColors />
           </ReviewProvider>
         </ThemeProvider>
       </body>

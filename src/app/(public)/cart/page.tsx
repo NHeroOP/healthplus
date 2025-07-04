@@ -8,10 +8,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { useCart } from "@/contexts/CartContext"
 import { toast, useSonner } from "sonner"
 import axios from "axios"
 import { useRouter } from "next/navigation"
+import { useCartStore } from "@/store/Cart"
 
 interface CartItem { 
   id: number
@@ -30,7 +30,7 @@ const PROMO_CODES = {
 }
 
 export default function CartPage() {
-  const { updateQuantity, removeFromCart, clearCart } = useCart()
+  const { updateItems, removeItem, clearCart } = useCartStore()
   const [items, setItems] = useState<CartItem[]>([])
   const [promoCode, setPromoCode] = useState("")
   const [appliedPromo, setAppliedPromo] = useState<string | null>(null)
@@ -61,7 +61,7 @@ export default function CartPage() {
   const handleQuantityChange = async (id: number, newQuantity: number) => {
     if (newQuantity < 1) {
       try {
-        removeFromCart(id)
+        removeItem(id.toString())
         const { data } = await axios.put("/api/store/cart", { id })
         setItems((prev) => prev.filter((item) => item.id !== id))
         toast.success("Item removed", {
@@ -74,7 +74,7 @@ export default function CartPage() {
       }
     } else {
       try {
-        updateQuantity(id, newQuantity)
+        updateItems({id: id.toString(), quantity: newQuantity})
         const { data } = await axios.put("/api/store/cart", { id, quantity: newQuantity })
         setItems((prev) =>
           prev.map((item) =>
@@ -91,7 +91,7 @@ export default function CartPage() {
 
   const handleRemoveItem = async(id: number, name: string) => {
     setItems((prev) => prev.filter((item) => item.id !== id))
-    removeFromCart(id)
+    removeItem(id.toString())
     const { data } = await axios.put("/api/store/cart", { id })
     toast.success("Item removed",{
       description: `${name} has been removed from your cart`,

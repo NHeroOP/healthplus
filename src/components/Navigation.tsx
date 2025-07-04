@@ -18,9 +18,11 @@ import { Badge } from "@/components/ui/badge";
 import { useTheme } from "next-themes";
 import { useAuthStore } from "@/store/Auth";
 import axios from "axios";
+import { useCartStore } from "@/store/Cart";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { items, getTotalQuantity } = useCartStore()
   const { user } = useAuthStore()
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
@@ -56,19 +58,8 @@ export default function Navigation() {
   }
 
   useEffect(() => {
-    const fetchCartItemCount = async () => {
-      try {
-        const { data } = await axios.get("/api/store/cart")
-        const quantityArr = data.items.map((item: any) =>  item.quantity)
-        const total = quantityArr.reduce((total: number, i: number) => total + i)
-        setItemCount(total)
-      } catch (err) {
-        setItemCount(0)
-      }
-    }
-
-    fetchCartItemCount()
-  }, [])
+    setItemCount(getTotalQuantity());
+  }, [items])
 
   return (
     <nav className="bg-background dark:bg-neutral-900 md:bg-background/95 md:dark:bg-neutral-900/95 border-b border-border sticky top-0 z-50">

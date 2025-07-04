@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
 
     (await cookies()).set(CART_COOKIE, JSON.stringify(cartItems), {
       path: "/",
-      httpOnly: true,
+      httpOnly: false,
       sameSite: "strict",
       secure: true,
       expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days

@@ -12,9 +12,9 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import ProductModal from "@/components/ProductModal"
 import ProductReviews from "@/components/ProductReviews"
-import { useCart } from "@/contexts/CartContext"
 import { useReviews } from "@/contexts/ReviewContext"
 import axios from "axios"
+import { useCartStore } from "@/store/Cart"
 
 interface Product {
   id: number
@@ -58,16 +58,11 @@ export default function ProductsPage() {
   const [quantities, setQuantities] = useState<{ [key: number]: number }>({})
   const [showReviews, setShowReviews] = useState<{ [key: number]: boolean }>({})
 
-  const { addToCart } = useCart()
+  const { updateItems } = useCartStore()
   const { getAverageRating } = useReviews()  
 
-
-
   useEffect(() => {
-    console.log("hello prdoducts")
     const getProducts = async () => {
-
-      console.log("hello function")
       try {
         const { data } = await axios.get("/api/store/products/get")
         if (data.success) {
@@ -172,7 +167,7 @@ export default function ProductsPage() {
     })
 
     if (respData.success) {
-      addToCart(product, quantity)
+      updateItems({ id: product.id.toString(), quantity })
       setQuantities({ ...quantities, [product.id]: 1 }) // Reset quantity after adding to cart
       alert("Product added to cart successfully!")
     } else {
