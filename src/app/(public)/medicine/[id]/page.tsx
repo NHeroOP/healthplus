@@ -12,10 +12,10 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import Navigation from "@/components/Navigation"
 import Footer from "@/components/Footer"
-import { useCart } from "@/contexts/CartContext"
 import ProductFAQ from "@/components/ProductFAQ"
 import ProductReviews from "@/components/ProductReviews"
 import { useAuthStore } from "@/store/Auth"
+import { useCartStore } from "@/store/Cart"
 
 // Extended product data with detailed medicine information
 const medicineData = {
@@ -103,7 +103,7 @@ const medicineData = {
 export default function MedicinePage() {
   const params = useParams()
   const router = useRouter()
-  const { addToCart } = useCart()
+  const { updateItems } = useCartStore()
   const { user } = useAuthStore()
   const [quantity, setQuantity] = useState(1)
   const medicineId = Number.parseInt(params.id as string)
@@ -133,7 +133,7 @@ export default function MedicinePage() {
   const ratingCounts = [5, 4, 3, 2, 1].map((rating) => reviews.filter((review) => review.rating === rating).length)
 
   const handleAddToCart = () => {
-    addToCart(medicine, quantity)
+    updateItems({id: String(medicine.id), quantity})
     setQuantity(1)
   }
 
