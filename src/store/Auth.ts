@@ -6,12 +6,12 @@ import { immer } from "zustand/middleware/immer";
 
 interface User {
   id: string;
+  username: string;
   email: string;
-  name: string;
   firstName: string;
   lastName: string;
   phone: string;
-  role: string;
+  // role: string;
 }
 
 interface IAuthStore {
@@ -26,7 +26,6 @@ interface IAuthStore {
 }
 
 export const useAuthStore = create<IAuthStore>()(
-  persist(
     immer((set) => ({
       isAuthenticated: false,
       hydrated: false,
@@ -57,14 +56,6 @@ export const useAuthStore = create<IAuthStore>()(
         set({ isAuthenticated });
       },
     
-    })),
-    {
-      name: "auth",
-      onRehydrateStorage() {
-        return (state, error) => {
-          if (!error) state?.setHydrated();
-        }
-      }
-    }
+    })
   )
 )

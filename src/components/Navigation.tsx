@@ -19,6 +19,7 @@ import { useTheme } from "next-themes";
 import { useAuthStore } from "@/store/Auth";
 import axios from "axios";
 import { useCartStore } from "@/store/Cart";
+import { signOut } from "next-auth/react";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,11 +29,13 @@ export default function Navigation() {
   const pathname = usePathname();
   const router = useRouter();
 
+  const { setAuthenticated, setUser } = useAuthStore();
+
   const [itemCount, setItemCount] = useState(0);
 
   const navItems = [
     { href: "/", label: "Home" },
-    { href: "/products", label: "Products" },
+    { href: "/store/products", label: "Products" },
     { href: "/about", label: "About" },
     { href: "/faq", label: "FAQ", icon: HelpCircle },
   ];
@@ -50,10 +53,14 @@ export default function Navigation() {
   }
 
   const handleLogout = async() => {
-    const { data } = await axios.get("/api/auth/logout")
+    // const { data } = await axios.get("/api/auth/logout")
+    try {
+      const res = signOut();
+      setUser(null);
+      setAuthenticated(false);
 
-    if (data.success) {
-      router.replace("/login")
+    } catch (err) {
+      console.log(err)
     }
   }
 
@@ -111,7 +118,7 @@ export default function Navigation() {
               )}
             </Button>
 
-            <Link href="/cart">
+            <Link href="/store/cart">
               <Button
                 variant="ghost"
                 size="sm"
@@ -158,7 +165,7 @@ export default function Navigation() {
                     Login
                   </Button>
                 </Link>
-                <Link href="/register">
+                <Link href="/signup">
                   <Button size="sm">Sign Up</Button>
                 </Link>
               </div>
@@ -180,7 +187,7 @@ export default function Navigation() {
               )}
             </Button>
 
-            <Link href="/cart">
+            <Link href="/store/cart">
               <Button
                 variant="ghost"
                 size="sm"
@@ -237,7 +244,7 @@ export default function Navigation() {
                 {user ? (
                   <div className="space-y-1">
                     <Link
-                      href="/profile"
+                      href="/store/profile"
                       className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-muted-foreground hover:text-foreground hover:bg-muted"
                       onClick={() => setIsMenuOpen(false)}
                     >
@@ -264,7 +271,7 @@ export default function Navigation() {
                       Login
                     </Link>
                     <Link
-                      href="/register"
+                      href="/signup"
                       className="block px-3 py-2 rounded-md text-base font-medium bg-primary text-primary-foreground hover:bg-primary/90"
                       onClick={() => setIsMenuOpen(false)}
                     >

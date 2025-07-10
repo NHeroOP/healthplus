@@ -1,13 +1,21 @@
-import { createAdminClient, getLoggedInUser } from "@/appwrite/server/config";
-import { DB, PRODUCTS } from "@/appwrite/server/name";
-import { CART_COOKIE, SESSION_COOKIE } from "@/const";
+
+import { CART_COOKIE} from "@/const";
+import { auth } from "@/server/auth";
+import connectDB from "@/server/connectDB";
+import ProductModel from "@/server/model/Product.model";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { ca } from "zod/v4/locales";
+
+interface Item {
+  id: string;
+  quantity?: number;
+}
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await getLoggedInUser();
-    const session = (await cookies()).get(SESSION_COOKIE);
+    const session = await auth();
+    const user = session?.user;
 
     if (!user || !session) {
       return NextResponse.json({
@@ -16,7 +24,7 @@ export async function POST(req: NextRequest) {
       }, { status: 401 });
     }
 
-    const item = await req.json();
+    const item: Item = await req.json();
 
     if (!item || !item.id || !item.quantity) {
       return NextResponse.json({
@@ -30,7 +38,7 @@ export async function POST(req: NextRequest) {
 
     if (cart && cart.value) {
       cartItems = JSON.parse(cart.value);
-      const existingItemIndex = cartItems.findIndex((i: any) => i.id === item.id);
+      const existingItemIndex = cartItems.findIndex((i: Item) => i.id === item.id);
 
       if (existingItemIndex > -1) {
         cartItems[existingItemIndex].quantity += item.quantity;
@@ -69,8 +77,10 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   try {
-    const user = await getLoggedInUser();
-    const session = (await cookies()).get(SESSION_COOKIE);
+    await connectDB();
+
+    const session = await auth();
+    const user = session?.user;
 
     if (!user || !session) {
       return NextResponse.json({
@@ -90,32 +100,26 @@ export async function GET() {
 
     const cartItems = JSON.parse(cart.value);
 
-    const { databases } = await createAdminClient();
+    if (!cartItems || cartItems.length === 0) {
+      return NextResponse.json({
+        success: true,
+        items: [],
+      }, { status: 200 });
+    }
 
-    let products = cartItems.map((item: any) => {
-      const product = databases.getDocument(
-        DB, PRODUCTS, item.id
-      ) 
+    const products = await Promise.all(cartItems.map(async(item: Item) => {
+      const product = await ProductModel.findById(item.id)
       return product;
-    });
-
-    // if (!products) {
-    //   return NextResponse.json({
-    //     success: false,
-    //     error: "No products found in the cart.",
-    //   }, { status: 404 });
-    // }
-
-    products = await Promise.all(products);
+    }))
 
     const productsObj = products.map((product: any) => (
       {
-        id: product.$id,
+        id: product._id,
         name: product.name,
         category: product.category,
         price: product.price,
         image: product.image,
-        quantity: cartItems.find((cartItem: any) => cartItem.id.toString() === product.$id)?.quantity || 1,
+        quantity: cartItems.find((cartItem: any) => cartItem.id.toString() === String(product._id))?.quantity || 1,
       }
     ))
 
@@ -136,8 +140,8 @@ export async function GET() {
 
 export async function PUT(req: NextRequest) {
   try {
-    const user = await getLoggedInUser();
-    const session = (await cookies()).get(SESSION_COOKIE);
+    const session = await auth();
+    const user = session?.user;
 
     if (!user || !session) {
       return NextResponse.json({
@@ -146,7 +150,7 @@ export async function PUT(req: NextRequest) {
       }, { status: 401 });
     }
 
-    const item = await req.json()
+    const item: Item = await req.json()
     const cart = (await cookies()).get(CART_COOKIE);
 
     if (!cart) {
@@ -157,7 +161,7 @@ export async function PUT(req: NextRequest) {
     }
     
     const cartItems = JSON.parse(cart.value)
-    const existingItemIndex = cartItems.findIndex((i: any) => i.id.toString() === item.id);
+    const existingItemIndex = cartItems.findIndex((i: Item) => i.id.toString() === item.id);
 
 
     if (existingItemIndex === -1) {
@@ -200,8 +204,8 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const user = await getLoggedInUser();
-    const session = (await cookies()).get(SESSION_COOKIE);
+    const session = await auth();
+    const user = session?.user;
 
     if (!user || !session) {
       return NextResponse.json({

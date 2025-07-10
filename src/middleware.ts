@@ -1,26 +1,19 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from "next/server"
+import { getToken } from "next-auth/jwt";
+ 
+export async function middleware(req: NextRequest ) {
+  const token = await getToken({ req, secret: process.env.AUTH_SECRET });
 
-import { getLoggedInUser } from '@/appwrite/server/config'
-import { SESSION_COOKIE } from './const'
-
-let isDbInitialized = false
-let isStorageInitialized = false
-
-export async function middleware(req: NextRequest) {
-  
+  const isLoggedIn = !!token
   const url = req.nextUrl
-  const user = await getLoggedInUser()
 
-  if (!user && !["/login", "/register", "/verify", "/", "/about", "/faq"].includes(url.pathname)) {
+  if (!isLoggedIn && (!["/login", "/signup", "/", "/about", "/faq"].includes(url.pathname) || !url.pathname.startsWith("/verify"))) {
     return NextResponse.redirect(new URL("/login", url))
   }
 
-  if (user && (["/login", "/register", "/verify"].includes(url.pathname))) {
+  if (isLoggedIn && ((["/login", "/signup"].includes(url.pathname)) || url.pathname.startsWith("/verify"))) {
     return NextResponse.redirect(new URL("/", url))
   }
-
-  return NextResponse.next()
 }
 
 export const config = {
@@ -33,5 +26,4 @@ export const config = {
     */
     '/((?!api|_next|.*\\..*).*)',
   ],
-  
 }
