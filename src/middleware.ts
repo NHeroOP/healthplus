@@ -7,11 +7,19 @@ export async function middleware(req: NextRequest ) {
   const isLoggedIn = !!token
   const url = req.nextUrl
 
-  if (!isLoggedIn && (!["/login", "/signup", "/", "/about", "/faq"].includes(url.pathname) || !url.pathname.startsWith("/verify"))) {
+  const isPublicRoute =
+    ["/login", "/signup", "/", "/about", "/faq"].includes(url.pathname) ||
+    url.pathname.startsWith("/verify");
+
+  if (!isLoggedIn && !isPublicRoute) {
     return NextResponse.redirect(new URL("/login", url))
   }
 
-  if (isLoggedIn && ((["/login", "/signup"].includes(url.pathname)) || url.pathname.startsWith("/verify"))) {
+  const isAuthOnlyPage =
+    ["/login", "/signup"].includes(url.pathname) ||
+    url.pathname.startsWith("/verify");
+  
+  if (isLoggedIn && isAuthOnlyPage) {
     return NextResponse.redirect(new URL("/", url))
   }
 }
